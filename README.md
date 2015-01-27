@@ -1,1 +1,5 @@
 # Modal
+
+```shell
+npm start
+```
