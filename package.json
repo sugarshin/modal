@@ -1,6 +1,6 @@
 {
   "name": "modal",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "modal",
   "repository": "git@github.com:sugarshin/modal.git",
   "main": "modal.js",

@@ -15,7 +15,7 @@
     if (typeof module === 'object' && typeof module.exports === 'object') {
       module.exports = factory(require('jquery'), require('events').EventEmitter);
     } else {
-      root.Modal || (root.Modal = factory(root.jQuery));
+      root.Modal || (root.Modal = factory(root.jQuery, root.EventEmitter));
     }
   })(this, function($, EventEmitter) {
     var Modal;

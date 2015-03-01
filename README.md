@@ -15,13 +15,17 @@ npm i sugarshin/modal
 ```coffeescript
 Modal = require 'modal'
 
-new Modal element, opts
+m = new Modal element, opts
+m.on 'openmodal', (el, instance) ->
+  # create modal content...
+  instance.render content
 ```
 
 or
 
 ```html
 <script src="jquery.js"></script>
+<script src="eventemitter.js"></script>
 <script src="modal.js"></script>
 <script>
   var modal = new Modal(element, opts);

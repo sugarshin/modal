@@ -108,5 +108,5 @@ do (root = this, factory = ($, EventEmitter) ->
   if typeof module is 'object' and typeof module.exports is 'object'
     module.exports = factory require('jquery'), require('events').EventEmitter
   else
-    root.Modal or= factory root.jQuery
+    root.Modal or= factory root.jQuery, root.EventEmitter
   return
