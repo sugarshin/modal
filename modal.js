@@ -94,7 +94,7 @@
           marginLeft: -this.opts.width / 2
         });
         this.closeEvent();
-        this.emit('openmodal', this.el, this);
+        this.emit('open', this.el, this);
         return this;
       };
 
@@ -105,7 +105,7 @@
           overflow: 'visible'
         });
         $(document.body.lastChild).remove();
-        this.emit('closemodal', this.el, this);
+        this.emit('close', this.el, this);
         return this;
       };
 

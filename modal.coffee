@@ -76,7 +76,7 @@ do (root = this, factory = ($, EventEmitter) ->
         marginLeft: -@opts.width / 2
 
       @closeEvent()
-      @emit 'openmodal', @el, this
+      @emit 'open', @el, this
       return this
 
     close: ->
@@ -85,7 +85,7 @@ do (root = this, factory = ($, EventEmitter) ->
         marginRight: 0
         overflow: 'visible'
       $(document.body.lastChild).remove()
-      @emit 'closemodal', @el, this
+      @emit 'close', @el, this
       return this
 
     evnets: ->
