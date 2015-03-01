@@ -1,103 +1,112 @@
-$ = require 'jquery'
-inherits = require 'inherits'
-EventEmitter2 = require('eventemitter2').EventEmitter2
+###!
+ * @license modal
+ * (c) sugarshin
+ * License: MIT
+###
 
-class Modal
-  "use strict"
+"use strict"
 
-  inherits @, EventEmitter2
+do (root = this, factory = ($, EventEmitter) ->
 
-  _anyOpened = false
-  @isAnyOpened: -> return _anyOpened
+  class Modal extends EventEmitter
 
-  _defaults:
-    wrapper: '.js-modal-wrapper'
-    open: '.js-modal-open'
-    close: '.js-modal-close'
-    toggle: '.js-modal-toggle'
-    type: ''
-    isOpen: false
+    _$body = $(document.body)
 
-  constructor: (opts) ->
-    EventEmitter2.call @
-    @opts = $.extend {}, @_defaults, opts
-    @$wrapper = $(@opts.wrapper)
-    @$open = $(@opts.open)
-    @$toggle = $(@opts.toggle)
-    @$close = $(@opts.close)
+    _modalElement = '<div class="modal-wrapper js-modal-wrapper">
+                      <div class="modal-bg js-modal-bg"></div>
+                      <div class="modal js-modal">
+                        <div class="modal-inner js-modal-inner">
+                          <div class="modal-body js-modal-body">
+                          </div>
+                        </div>
+                      </div>
+                    </div>'
 
-    # @compiledHtml = JST[@opts.type]()
-    @addOpenEvent()
-    @addToggleEvent()
+    _anyOpend = false
 
-    if @opts.isOpen then @open()
+    @setBaseElement: (el) -> _modalElement = el
+    @isAnyOpened: -> _anyOpend
 
-  isOpened: -> return @opts.isOpen
+    _defaults:
+      width: 640
+      height: 360
+      bodySelector: '.js-modal-body'
 
-  render: ->
-    @$wrapper.append @compiledHtml
-    return this
+    _configure: (el, opts) ->
+      @$el = $(el)
+      @opts = $.extend {}, @_defaults, opts
 
-  open: ->
-    # if _anyOpened then return this
-    if @isOpened() then return this
-    @opts.isOpen = true
-    _anyOpened = true
+    _getScrollbarWidth: ->
+      div = document.createElement 'div'
+      div.style.width = '100px'
+      div.style.height = '100px'
+      div.style.overflow = 'scroll'
+      div.style.position = 'absolute'
+      div.style.top = '-9999px'
+      document.body.appendChild div
+      scrollbarWidth = div.offsetWidth - div.clientWidth
+      document.body.removeChild div
+      return scrollbarWidth
 
-    @render()
+    constructor: (@el, opts) ->
+      @_configure @el, opts
+      EventEmitter.call @
+      @evnets()
 
-    @$wrapper
-      .stop true, true
-      .fadeIn => @emit 'afterfadein'
+    render: (el) ->
+      $(@opts.bodySelector).append el
+      return this
 
-    @emit 'open'
-    return this
+    set: (name, val) ->
+      @opts[name] = val
 
-  empty: ->
-    @$wrapper.empty()
-    return this
+    open: ->
+      if _anyOpend then return
+      @_opened = _anyOpend = true
+      scrollBarWidth = @_getScrollbarWidth()
+      _$body
+        .css 'margin-right', scrollBarWidth
+        .append _modalElement
+        .css 'overflow', 'hidden'
 
-  close: ->
-    @opts.isOpen = false
-    _anyOpened = false
+      $('.js-modal').css
+        width: @opts.width
+        height: @opts.height
+        marginTop: -@opts.height / 2
+        marginLeft: -@opts.width / 2
 
-    @$wrapper
-      .stop true, true
-      .fadeOut => @emit 'afterfadeout'
+      @closeEvent()
+      @emit 'openmodal', @el, this
+      return this
 
-    @emit 'close'
-    return this
+    close: ->
+      @_opened = _anyOpend = false
+      _$body.css
+        marginRight: 0
+        overflow: 'visible'
+      $(document.body.lastChild).remove()
+      @emit 'closemodal', @el, this
+      return this
 
-  toggle: ->
-    if @isOpened()
-      @close()
-    else
-      @open()
-    return this
+    evnets: ->
+      @$el.on 'click.openmodal', (ev) =>
+        ev?.preventDefault?()
+        @open()
+      return this
 
-  addOpenEvent: ->
-    @$open.on 'click.openmodal', (ev) =>
-      ev.preventDefault()
-      @open().addCloseEvent()
-    return this
+    unbind: ->
+      @$el.off 'click.openmodal'
+      return this
 
-  addToggleEvent: ->
-    @$toggle.on 'click.togglemodal', (ev) =>
-      ev.preventDefault()
-      @toggle()
-    return this
+    closeEvent: ->
+      $('.js-close-modal, .js-modal-bg').on 'click.closemodal', (ev) =>
+        ev?.preventDefault?()
+        @close()
+      return this
 
-  addCloseEvent: ->
-    @$wrapper
-      .find(@opts.close)
-      .on 'click.closemodal', (ev) =>
-        ev.preventDefault()
-        @close().empty()
-    return this
-
-if typeof define is 'function' and define.amd
-  define -> Modal
-else if typeof module isnt 'undefined' and module.exports
-  module.exports = Modal
-else
-  window.Modal or= Modal
+) ->
+  if typeof module is 'object' and typeof module.exports is 'object'
+    module.exports = factory require('jquery'), require('events').EventEmitter
+  else
+    root.Modal or= factory root.jQuery
+  return
