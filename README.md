@@ -32,7 +32,6 @@ or
 
   modal.on('openmodal', function(el, instance) {
     // create modal content...
-
     instance.render(content);
   });
 </script>
