@@ -16,9 +16,9 @@ npm i sugarshin/modal
 Modal = require 'modal'
 
 m = new Modal element, opts
-m.on 'open', (el, instance) ->
+m.on 'open', (el, modal) ->
   # create modal content...
-  instance.render content
+  modal.render content
 ```
 
 or
@@ -29,9 +29,9 @@ or
 <script src="modal.js"></script>
 <script>
   var m = new Modal(element, opts);
-  m.on('open', function(el, instance) {
+  m.on('open', function(el, modal) {
     // create modal content...
-    instance.render(content);
+    modal.render(content);
   });
 </script>
 ```
