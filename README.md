@@ -16,7 +16,7 @@ npm i sugarshin/modal
 Modal = require 'modal'
 
 m = new Modal element, opts
-m.on 'openmodal', (el, instance) ->
+m.on 'open', (el, instance) ->
   # create modal content...
   instance.render content
 ```
@@ -28,9 +28,8 @@ or
 <script src="eventemitter.js"></script>
 <script src="modal.js"></script>
 <script>
-  var modal = new Modal(element, opts);
-
-  modal.on('openmodal', function(el, instance) {
+  var m = new Modal(element, opts);
+  m.on('open', function(el, instance) {
     // create modal content...
     instance.render(content);
   });
