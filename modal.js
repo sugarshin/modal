@@ -41,7 +41,11 @@
       Modal.prototype._defaults = {
         width: 640,
         height: 360,
-        bodySelector: '.js-modal-body'
+        wrapperSelector: '.js-modal-wrapper',
+        bgSelector: '.js-modal-bg',
+        coreSelector: '.js-modal',
+        bodySelector: '.js-modal-body',
+        closeSelector: '.js-close-modal'
       };
 
       Modal.prototype._configure = function(el, opts) {
@@ -86,8 +90,9 @@
         }
         this._opened = _anyOpend = true;
         scrollBarWidth = this._getScrollbarWidth();
+        this._normalBodyMarginRight = _$body.css('margin-right');
         _$body.css('margin-right', scrollBarWidth).append(_modalElement).css('overflow', 'hidden');
-        $('.js-modal').css({
+        $(this.opts.coreSelector).css({
           width: this.opts.width,
           height: this.opts.height,
           marginTop: -this.opts.height / 2,
@@ -101,10 +106,10 @@
       Modal.prototype.close = function() {
         this._opened = _anyOpend = false;
         _$body.css({
-          marginRight: 0,
+          marginRight: this._normalBodyMarginRight,
           overflow: 'visible'
         });
-        $(document.body.lastChild).remove();
+        $(this.opts.wrapperSelector).remove();
         this.emit('close', this.el, this);
         return this;
       };
@@ -129,7 +134,7 @@
       };
 
       Modal.prototype.closeEvent = function() {
-        $('.js-close-modal, .js-modal-bg').on('click.closemodal', (function(_this) {
+        $(this.opts.closeSelector + ", " + this.opts.bgSelector).on('click.closemodal', (function(_this) {
           return function(ev) {
             if (ev != null) {
               if (typeof ev.preventDefault === "function") {

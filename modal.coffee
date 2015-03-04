@@ -30,7 +30,12 @@ do (root = this, factory = ($, EventEmitter) ->
     _defaults:
       width: 640
       height: 360
+      # fade: false
+      wrapperSelector: '.js-modal-wrapper'
+      bgSelector: '.js-modal-bg'
+      coreSelector: '.js-modal'
       bodySelector: '.js-modal-body'
+      closeSelector: '.js-close-modal'
 
     _configure: (el, opts) ->
       @$el = $(el)
@@ -64,12 +69,13 @@ do (root = this, factory = ($, EventEmitter) ->
       if _anyOpend then return
       @_opened = _anyOpend = true
       scrollBarWidth = @_getScrollbarWidth()
+      @_normalBodyMarginRight = _$body.css 'margin-right'
       _$body
         .css 'margin-right', scrollBarWidth
         .append _modalElement
         .css 'overflow', 'hidden'
 
-      $('.js-modal').css
+      $(@opts.coreSelector).css
         width: @opts.width
         height: @opts.height
         marginTop: -@opts.height / 2
@@ -82,9 +88,9 @@ do (root = this, factory = ($, EventEmitter) ->
     close: ->
       @_opened = _anyOpend = false
       _$body.css
-        marginRight: 0
+        marginRight: @_normalBodyMarginRight
         overflow: 'visible'
-      $(document.body.lastChild).remove()
+      $(@opts.wrapperSelector).remove()
       @emit 'close', @el, this
       return this
 
@@ -99,7 +105,7 @@ do (root = this, factory = ($, EventEmitter) ->
       return this
 
     closeEvent: ->
-      $('.js-close-modal, .js-modal-bg').on 'click.closemodal', (ev) =>
+      $("#{@opts.closeSelector}, #{@opts.bgSelector}").on 'click.closemodal', (ev) =>
         ev?.preventDefault?()
         @close()
       return this
