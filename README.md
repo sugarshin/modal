@@ -4,7 +4,7 @@
 
 Modal
 
-Semantic modal base class
+Semantic modal base
 
 ```shell
 npm i sugarshin/modal
@@ -24,9 +24,7 @@ m.on 'open', (el, modal) ->
 or
 
 ```html
-<script src="jquery.js"></script>
-<script src="eventemitter.js"></script>
-<script src="modal.js"></script>
+<script src="build/modal.js"></script>
 <script>
   var m = new Modal(element, opts);
   m.on('open', function(el, modal) {
@@ -38,24 +36,33 @@ or
 
 ### Config
 
+default options
+
 ```coffeescript
 _defaults:
   width: 640
   height: 360
+  wrapperSelector: '.js-modal-wrapper'
+  bgSelector: '.js-modal-bg'
+  coreSelector: '.js-modal'
   bodySelector: '.js-modal-body'
+  closeSelector: '.js-close-modal'
 ```
 
 ## Contributing
 
-[CoffeeScript](//coffeescript.org/)
+deps
 
-[mocha-phantomjs](//github.com/metaskills/mocha-phantomjs)
-
-[power-assert](//github.com/twada/power-assert)
+* component-event
+* crel
+* dom-style
+* object-assign
 
 ```shell
 npm test
 ```
+
+**inpmplete test**
 
 ## License
 

@@ -1,17 +1,13 @@
+jsdom = require('jsdom').jsdom
+global.document = jsdom '<html><body></body></html>'
+global.window = document.defaultView
+global.navigator = window.navigator
+
 assert = require 'power-assert'
 
-Modal = require '../modal'
-
-mocha.setup 'bdd'
-window.onload = ->
-  if window.mochaPhantomJS
-    mochaPhantomJS.run()
-  else
-    mocha.run()
-
-
+Modal = require '../src/modal.coffee'
 
 # .test()
 describe '.test()', ->
-  it 'テストのテスト', ->
+  it 'test', ->
     assert true
